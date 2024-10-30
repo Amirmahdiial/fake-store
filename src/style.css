@@ -1,0 +1,120 @@
+.alaki{
+    display: none;
+}
+.card__container {
+    display: grid;
+    row-gap: 3.5rem;
+}
+.card__article {
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 24px hsla(0, 0%, 0%, 0.15);
+    border-radius: 1.5rem;
+}
+.card__img {
+    width: 328px;
+    width: 100%;
+    border-radius: 1.5rem;
+}
+.card__data {
+    width: 90%;
+    font-size: smaller;
+    background-color: hsl(0, 0%, 100%);
+    padding: 1.5rem 2rem;
+    box-shadow: 0 8px 24px hsla(0, 0%, 0%, 0.15);
+    border-radius: 1rem;
+    position: absolute;
+    bottom: -9rem;
+    left: 0;
+    right: 0;
+    margin-inline: auto;
+    opacity: 0;
+    transition: opacity 1s 1s;
+}
+@media (min-width: 640px) {
+    .card__article:hover .card__data {
+        animation: show-data 1s forwards;
+        opacity: 1;
+        transition: opacity 0.3s;
+    }
+    .card__article:hover .card__img {
+        filter: blur(2px);
+    }
+    .card__article:hover {
+        animation: remove-overflow 2s forwards;
+    }
+    .card__article:not(:hover) {
+        animation: show-overflow 2s forwards;
+    }
+    .card__article:not(:hover) .card__data {
+        animation: remove-data 1s forwards;
+    }
+}
+
+@keyframes show-data {
+    50% {
+        transform: translateY(-10rem);
+    }
+    100% {
+        transform: translateY(-7rem);
+    }
+}
+@keyframes remove-overflow {
+    to {
+        overflow: initial;
+    }
+}
+@keyframes remove-data {
+    0% {
+        transform: translateY(-7rem);
+    }
+    50% {
+        transform: translateY(-10rem);
+    }
+    100% {
+        transform: translateY(0.5rem);
+    }
+}
+@keyframes show-overflow {
+    0% {
+        overflow: initial;
+        pointer-events: none;
+    }
+    50% {
+        overflow: hidden;
+    }
+}
+@media (max-width: 640px) {
+    .container {
+        margin-inline: 2rem;
+        opacity: 1; 
+        position: relative; 
+        bottom: 0;
+        transform: translateY(0); 
+        transition: none; 
+    }
+    .card__data {
+        width: 100%;
+        padding: 1rem;
+        opacity: 1; 
+        position: relative; 
+        bottom: 0;
+        transform: translateY(0); 
+        transition: none; 
+    }
+    .card__article:hover .card__data {
+        opacity: 1;
+    }
+}
+@media screen and (min-width: 768px) {
+    .card__container {
+        grid-template-columns: repeat(2, 1fr);
+        column-gap: 1.5rem;
+    }
+}
+@media screen and (min-width: 1120px) {
+    .card__container {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
