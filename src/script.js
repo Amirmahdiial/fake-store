@@ -2,6 +2,8 @@ const root = document.querySelector(".root");
 let productsRoot;
 let showAllProducts = false;
 
+let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
 async function renderMenuCategories() {
   const cats = await fetch("https://fakestoreapi.com/products/categories")
     .then((res) => res.json())
@@ -70,6 +72,7 @@ function renderProducts(list) {
             class="w-6 mr-[10%] cursor-pointer hover:bg-red-500 hover:rounded-lg"
             src="img/icons8-shopping-bag-50.png"
             alt=""
+            onclick="addToCart(${JSON.stringify(product)})"
           />
         </div>
       </div>
@@ -119,6 +122,7 @@ async function renderMainPage() {
   productsRoot = document.getElementById("products-root");
   await renderLimitedProducts();
 }
+
 function renderSingleCategory(list) {
   const template = list
     .map((product) => {
@@ -147,6 +151,7 @@ function renderSingleCategory(list) {
               class="w-6 mr-20 cursor-pointer hover:bg-red-500 hover:rounded-lg"
               src="img/icons8-shopping-bag-50.png"
               alt=""
+              onclick="addToCart(${JSON.stringify(product)})"
             />
           </div>
         </div>
@@ -171,55 +176,33 @@ async function getSingleProduct(productId) {
 
   return result;
 }
-
-function renderSingleProduct({
-  category: cat,
-  description: desc,
-  image,
-  price,
-  title,
-}) {
+function renderSingleProduct({ id, category: cat, description: desc, image, price, title }) {
   const template = `
-    <div
-    class="w-11/12 mx-auto pt-16 flex items-center justify-center flex-col gap-2 md:gap-4 md:max-w-[1280px] lg:flex-row lg:items-start"
-  >
-  <img
-  src="${image}"
-  class="rounded-md w-[50%] my-4"
-  alt=""
-/>
-    <div class="order-1 w-full md:mt-20">
-      <span class="text-white bg-black rounded-full px-4 py-1"
-        >${cat}</span
-      >
-      <div class="mt-4">
-        <a href="/src/index.html">صفحه اصلی</a>
-        /
-        <a onclick="handleAClick(event)" href="/products">همه محصولات</a>
+    <div class="w-11/12 mx-auto pt-16 flex items-center justify-center flex-col gap-2 md:gap-4 md:max-w-[1280px] lg:flex-row lg:items-start">
+      <img src="${image}" class="rounded-md w-[50%] my-4" alt=""/>
+      <div class="order-1 w-full md:mt-20">
+        <span class="text-white bg-black rounded-full px-4 py-1">${cat}</span>
+        <div class="mt-4">
+          <a href="/src/index.html">صفحه اصلی</a> /
+          <a onclick="handleAClick(event)" href="/products">همه محصولات</a>
+        </div>
+        <h1 class="text-slate-700 mb-5 mt-4 text-2xl font-bold">${title}</h1>
+        <p>${desc}</p>
+        <div class="block text-center md:mt-4 md:text-start font-extrabold">
+          <span>${price}</span> تومان
+        </div>
+        <button class="w-full md:w-auto px-4 py-2 my-5 bg-red-500 text-white rounded-md text-center" 
+                onclick="addToCart({ id: ${id}, title: '${title}', price: ${price}, image: '${image}' })">
+          اضافه به سبد خرید
+        </button>
       </div>
-      <h1 class="text-slate-700 mb-5 mt-4 text-2xl font-bold">
-        ${title}
-      </h1>
-
-      <p>
-        ${desc}
-      </p>
-
-      <div class="block text-center md:mt-4 md:text-start font-extrabold">
-        <span>${price}</span>
-        تومان
-      </div>
-      <button
-        class="w-full md:w-auto px-4 py-2 my-5 bg-red-500 text-white rounded-md text-center"
-      >
-        اضافه به سبد خرید
-      </button>
     </div>
-  </div>
-    `;
+  `;
   document.querySelector(".body").innerHTML = template;
 }
+
 renderMainPage();
+
 function handleBClick(event) {
   event.preventDefault();
   const href = event.target.getAttribute("href");
@@ -227,9 +210,11 @@ function handleBClick(event) {
 
   checkState();
 }
+
 function openNav() {
   document.querySelector(".nav").classList.toggle("alaki");
 }
+
 async function handleAClick(event) {
   event.preventDefault();
   const href = event.target.getAttribute("href");
@@ -243,7 +228,7 @@ async function handleAClick(event) {
     await renderLimitedProducts();
     document.getElementById("toggleButton").innerText = "مشاهده بیشتر";
   }
-  renderProducts(list);
+
   history.pushState({}, "", href);
   checkState();
 }
@@ -286,5 +271,91 @@ async function checkState() {
       break;
   }
 }
-
 window.addEventListener("popstate", checkState);
+
+
+
+
+
+function updateCart() {
+
+  localStorage.setItem('cart', JSON.stringify(cart));
+
+
+  document.getElementById('cart-count').textContent = cart.length;
+
+  const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  document.getElementById('cart-total').textContent = total.toLocaleString();
+
+  renderCartItems();
+}
+function addToCart(product) {
+  const existingProduct = cart.find(item => item.id === product.id);
+
+  if (existingProduct) {
+    existingProduct.quantity++;
+  } else {
+    cart.push({ ...product, quantity: 1 });
+  }
+
+  updateCart();
+}
+
+function removeFromCart(productId) {
+  cart = cart.filter(item => item.id !== productId);
+
+  updateCart();
+}
+
+function changeQuantity(productId, delta) {
+  const product = cart.find(item => item.id === productId);
+
+  if (product) {
+    product.quantity = Math.max(1, product.quantity + delta);
+    updateCart();
+  }
+}
+function renderCartItems() {
+  const cartItemsContainer = document.getElementById('cart-items');
+  cartItemsContainer.innerHTML = '';
+
+  if (cart.length === 0) {
+    cartItemsContainer.innerHTML = '<p class="text-center text-gray-500">سبد خرید شما خالی است.</p>';
+  } else {
+    cart.forEach(item => {
+      const cartItem = document.createElement('div');
+      cartItem.classList.add('flex', 'items-center', 'justify-between', 'p-2', 'border-b', 'hover:bg-gray-100');
+      cartItem.innerHTML = `
+        <div class="flex items-center gap-2">
+          <img src="${item.image}" alt="${item.title}" class="w-12 h-12 object-cover rounded-md"/>
+          <div>
+            <p class="font-semibold">${item.title}</p>
+            <p class="text-sm text-gray-500">${item.quantity} × ${item.price.toLocaleString()} تومان</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="changeQuantity(${item.id}, -1)" class="px-2 py-1 bg-gray-200 rounded-full hover:bg-gray-300">-</button>
+          <span>${item.quantity}</span>
+          <button onclick="changeQuantity(${item.id}, 1)" class="px-2 py-1 bg-gray-200 rounded-full hover:bg-gray-300">+</button>
+          <button onclick="removeFromCart(${item.id})" class="ml-2 text-red-500 hover:text-red-600">حذف</button>
+        </div>
+      `;
+      cartItemsContainer.appendChild(cartItem);
+    });
+  }
+}
+
+document.getElementById('cart-button').addEventListener('click', () => {
+  const cartPopup = document.getElementById('cart-popup');
+  cartPopup.classList.toggle('hidden');
+});
+
+document.addEventListener('click', (event) => {
+  const cartPopup = document.getElementById('cart-popup');
+  const cartButton = document.getElementById('cart-button');
+  if (!cartButton.contains(event.target) && !cartPopup.contains(event.target)) {
+    cartPopup.classList.add('hidden');
+  }
+});
+
+updateCart();

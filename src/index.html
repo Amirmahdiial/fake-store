@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <link rel="stylesheet" href="output.css" />
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css" />
     <script defer src="script.js"></script>
   </head>
   <body>
@@ -15,18 +15,19 @@
           class="flex justify-between items-center mx-auto max-w-[480px] md:max-w-[680px] lg:max-w-[1280px]"
         >
           <div class="">
-              <img
+            <img
               onclick="openNav()"
               class="aks w-6 cursor-pointer lg:hidden"
               src="img/hamburger-menu-icon.png"
               alt=""
             />
-            <div class="nav alaki lg:hidden absolute top-8 pt-8  md:group-hover:!block">
+            <div
+              class="nav alaki lg:hidden absolute top-8 pt-8 md:group-hover:!block"
+            >
               <ul
-              id="cats2-menu"
+                id="cats2-menu"
                 class="bg-white shadow-xl w-full rounded-md px-6 py-2 flex flex-col gap-2 border-1"
-              >
-              </ul>
+              ></ul>
             </div>
             <a href="./index.html"
               ><img class="w-[140px] hidden lg:block" src="img/PNG.png" alt=""
@@ -34,7 +35,7 @@
           </div>
           <div class="flex items-center">
             <img
-              class="w-12 cursor-pointer lg:hidden"
+              class="w-12 cursor-pointer mr-16 lg:hidden"
               src="img/logo512-512.png"
               alt=""
             />
@@ -52,7 +53,7 @@
 
           <div class="flex">
             <img
-              class="w-6 cursor-pointer lg:hidden"
+              class="w-6 cursor-pointer hidden lg:hidden"
               src="img/search-icon.png"
               alt=""
             />
@@ -62,57 +63,89 @@
             <button
               class="font-semibold hidden lg:block m-2 p-4 hover:text-gray-500 shadow-lg"
             >
-              سبد خرید
+            <button id="cart-button" class="btn  rounded-lg ">
+              🛒 سبد خرید (<span id="cart-count">0</span>)
+            </button>
+              
             </button>
           </div>
         </div>
       </div>
       <div class="shadow-sm hidden lg:block">
         <ul
-        id="cats-menu"
+          id="cats-menu"
           class="flex items-center mx-auto max-w-[480px] md:max-w-[680px] lg:max-w-[1280px]"
         >
-          <li class="p-2 text-gray-500"><a href="/src/index.html">پوشاک تعطیلات</a></li>
+          <li class="p-2 text-gray-500">
+            <a href="/src/index.html">پوشاک تعطیلات</a>
+          </li>
           <span class="text-gray-400">|</span>
         </ul>
       </div>
     </header>
     <div class="body">
-      <div class=" mx-auto max-w-[480px] md:max-w-[680px] lg:max-w-[1280px]">
-        <img class="mt-4 rounded-lg hidden lg:block" src="img/slider/NEWarrival-1500x656.webp" alt="">
-        <img class="mt-4 rounded-lg lg:hidden" src="img/slider 2/NEWarrivalMob.webp" alt="">
-    </div>
-    <div class="flex justify-around p-5 mt-5 border-b-2 border-orange-500 border-t-2 mx-auto max-w-[480px] md:max-w-[680px] lg:max-w-[1280px]">
-      <img class="cursor-pointer w-[25%]" src="img/send/ersal.png" alt="">
-      <img class="cursor-pointer w-[25%]" src="img/send/snap.png" alt="">
-      <img class="cursor-pointer w-[25%]" src="img/send/taviz.png" alt="">
-    </div>
-    <div class="root mx-auto max-w-[480px] md:max-w-[680px] lg:max-w-[1280px]">
-
+      <div class="mx-auto max-w-[480px] md:max-w-[680px] lg:max-w-[1280px]">
+        <img
+          class="mt-4 rounded-lg hidden lg:block"
+          src="img/slider/NEWarrival-1500x656.webp"
+          alt=""
+        />
+        <img
+          class="mt-4 rounded-lg lg:hidden"
+          src="img/slider 2/NEWarrivalMob.webp"
+          alt=""
+        />
+        <div id="cart-popup" class="absolute top-12 left-0 w-80 bg-white shadow-lg rounded-lg p-4 hidden z-10">
+          <div id="cart-items"></div>
+          <div class="mt-4 flex justify-between items-center border-t pt-2">
+            <span class="font-bold">مجموع:</span>
+            <span id="cart-total">0</span> تومان
+          </div>
+          <div class="mt-4 flex justify-between items-center">
+            <button id="checkout-button" class="btn w-full bg-green-500 text-white rounded-lg py-2 hover:bg-green-600">
+              تسویه حساب
+            </button>
+          </div>
+        </div>
+      </div>
+      <div
+        class="flex justify-around p-5 mt-5 border-b-2 border-orange-500 border-t-2 mx-auto max-w-[480px] md:max-w-[680px] lg:max-w-[1280px]"
+      >
+        <img class="cursor-pointer w-[25%]" src="img/send/ersal.png" alt="" />
+        <img class="cursor-pointer w-[25%]" src="img/send/snap.png" alt="" />
+        <img class="cursor-pointer w-[25%]" src="img/send/taviz.png" alt="" />
+      </div>
+      <div
+        class="root mx-auto max-w-[480px] md:max-w-[680px] lg:max-w-[1280px]"
+      >
+      
     </div>
     </div>
     <footer>
-      <div class="mb-11 pt-5 border-t-2 border-orange-400 flex flex-col lg:flex-row items-center justify-center gap-4 mx-auto max-w-[480px] md:max-w-[680px] lg:max-w-[1280px]">
-        <div class="gap-2 flex flex-col items-center justify-center ">
-          <img src="img/PNG.png" alt="">
+      <div
+        class="mb-11 pt-5 border-t-2 border-orange-400 flex flex-col lg:flex-row items-center justify-center gap-4 mx-auto max-w-[480px] md:max-w-[680px] lg:max-w-[1280px]"
+      >
+        <div class="gap-2 flex flex-col items-center justify-center">
+          <img src="img/PNG.png" alt="" />
           <div>
-            آدرس :تهران-کیلومتر 15 جاده مخصوص تهران-کرج، بعد از چهارراه ایران خودرو-خیابان انصار-کوچه اول غربی-پلاک 21-شرکت تعطیلات
+            آدرس :تهران-کیلومتر 15 جاده مخصوص تهران-کرج، بعد از چهارراه ایران
+            خودرو-خیابان انصار-کوچه اول غربی-پلاک 21-شرکت تعطیلات
           </div>
           <span>تلفن:02144184918</span>
         </div>
         <div>
           <ul>
             <li>صفحات پر بازدید</li>
-            <li class="text-slate-600 cursor-pointer"> تماس یا ما </li>
+            <li class="text-slate-600 cursor-pointer">تماس یا ما</li>
             <li class="text-slate-600 cursor-pointer">دریاره ما</li>
             <li class="text-slate-600 cursor-pointer">باشگاه مشتریان</li>
             <li class="text-slate-600 cursor-pointer">شرایط و قوانین</li>
             <li class="text-slate-600 cursor-pointer">سوالات متداول</li>
           </ul>
         </div>
-        <img src="img/81.png" alt="">
-        <img src="img/logonama.png" alt="">
-        <img class="w-[20%]" src="img/instagram.png" alt="">
+        <img src="img/81.png" alt="" />
+        <img src="img/logonama.png" alt="" />
+        <img class="w-[20%]" src="img/instagram.png" alt="" />
       </div>
     </footer>
   </body>
